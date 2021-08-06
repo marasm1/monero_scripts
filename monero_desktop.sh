@@ -73,11 +73,11 @@ case $ans in
         exit;;
 esac
 
-#download monero miner
-wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-focal-x64.tar.gz -P /home/$user/monero/
+#download xmrig monero miner
+wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-focal-x64.tar.gz -P /home/$user/xmrig/
 
 #decompress monero
-tar -xvf /home/$user/xlarig/XLArig-v5.2.2-linux-x86_64.tar.gz -d /home/$user/monero/
+tar -xvf /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gz -d /home/$user/xmrig/
 
 #remove monero compressed file
 rm /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gz
