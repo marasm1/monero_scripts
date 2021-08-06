@@ -3,6 +3,8 @@
 read -p "Enter a name for system (generally the hostname): " name
 read -p "Enter the username to use (generally who you are logged in as): " user
 
+apt update && apt upgrade -y
+
 #set system type for laptop or desktop
 read -n 1 -p "Is this system a laptop, desktop, or would you like to exit? (L/D/E) " ans;
 case $ans in
