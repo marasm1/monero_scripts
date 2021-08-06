@@ -44,7 +44,7 @@ case $ans in
               access-points:
                 "green"
                   password: "$wifipass"
-        EOF
+EOF
         netplan apply;;
     d|D)
         port=1111
@@ -67,7 +67,7 @@ case $ans in
             $lan:
               dhcp4: true
               optional: true
-        EOF
+EOF
         netplan apply;;
     *)
         exit;;
