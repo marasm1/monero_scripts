@@ -23,7 +23,6 @@ case $ans in
         #add line to sshd conf for root login
         sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
         #remove all of cloud-init
-        echo 'datasource_list: [ None ]' | sudo -s tee /etc/cloud/cloud.cfg.d/90_dpkg.cfg
         apt purge cloud-init -y
         rm -rf /etc/cloud/ && rm -rf /var/lib/cloud/
         #backup netplan file and create new one with correct network data
@@ -206,3 +205,5 @@ EOF
 #enable xlarig service and reboot
 systemctl enable xmrig
 systemctl start xmrig
+
+reboot now
