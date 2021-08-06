@@ -30,7 +30,7 @@ case $ans in
 		#backup netplan file and create new one with correct network data
 		mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
 		#create new netplan file
-		cat > /etc/netplan/00-installer-config.yaml <<EOF1
+		cat > /etc/netplan/00-installer-config.yaml <<EOF
 		network:
 			version: 2
 			ethernets:
@@ -44,7 +44,7 @@ case $ans in
 					access-points:
 						"green"
 							password: "$wifipass"
-		EOF1
+		EOF
 		netplan apply;;
 	d|D)
 		port=1111
@@ -59,14 +59,14 @@ case $ans in
 		#backup netplan file and create new one with correct network data
 		mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
 		#create new netplan file
-		cat > /etc/netplan/00-installer-config.yaml <<EOF2
+		cat > /etc/netplan/00-installer-config.yaml <<EOF
 		network:
 			version: 2
 			ethernets:
 				$lan:
 					dhcp4: true
 					optional: true
-		EOF2
+		EOF
 		netplan apply;;
 	*)
 	exit;;
@@ -78,7 +78,7 @@ tar -xvf /home/$user/xlarig/XLArig-v5.2.2-linux-x86_64.tar.gz -d /home/$user/mon
 #remove monero compressed file
 rm /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gz
 #create config.json
-cat > /home/$user/xmrig/config.json <<EOF3
+cat > /home/$user/xmrig/config.json <<EOF
 {
 	"api": {
 		"id": null,
@@ -181,9 +181,9 @@ cat > /home/$user/xmrig/config.json <<EOF3
 	"pause-on-battery": false,
 	"pause-on-active": false
 }
-EOF3
+EOF
 #create xmrig service
-cat > /etc/systemd/system/xmrig.service <<EOF4
+cat > /etc/systemd/system/xmrig.service <<EOF
 [Unit]
 Description=xmrig Monero Miner
 After=network.target
@@ -196,7 +196,7 @@ ExecStart=/home/$user/xmrig/xmrig
 Restart=always
 [Install]
 WantedBy=multi-user.target
-EOF4
+EOF
 
 #enable xlarig service and reboot
 systemctl enable xmrig
