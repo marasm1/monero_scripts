@@ -76,11 +76,11 @@ mkdir xmrig
 #download monero miner
 wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-focal-x64.tar.gz -P /home/$user/xmrig/
 #decompress xmrig
-tar -xvf /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gzz -d /home/$user/xmrig/
+tar -xzf /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gzz -C /home/$user/xmrig/
 #remove xmrig compressed file
 rm /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gz
 #create config.json
-cat > /home/$user/xmrig/config.json <<EOF
+cat > /home/$user/xmrig/xmrig-6.13.1-focal-x64/config.json <<EOF
 {
     "api": {
         "id": null,
