@@ -74,7 +74,7 @@ esac
 #download xmrig monero miner
 wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-focal-x64.tar.gz
 #decompress xmrig monero miner
-tar -xzf /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gz -C /home/$user/xmrig/
+tar -xzf xmrig-6.13.1-focal-x64.tar.gz
 #remove xmrig compressed file
 rm xmrig-6.13.1-focal-x64.tar.gz
 #create config.json
