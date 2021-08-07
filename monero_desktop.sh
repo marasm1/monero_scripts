@@ -9,74 +9,81 @@ apt install lm-sensors inxi unzip -y
 #set system type for laptop or desktop
 read -n 1 -p "Is this system a laptop, desktop, or would you like to exit? (L/D/E) " ans;
 case $ans in
-    l|L)
-        echo
-        read -p "Enter the wifi password: " wifipass
-        port=1112
-        lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
-        wlan=$(ip link | awk -F: '$0 !~ "lo|vir|eno|eth|^[^0-9]"{print $2;getline}')
-        #install wpa_supplicant, start and enable wpa_supplicant
-        apt install wpasupplicant -y
-        systemctl start wpa_supplicant
-        systemctl enable wpa_supplicant
-        #change settings so laptop lid does not turn off or sleep laptop
-        sed -i 's/#HandleLidSwitch=suspend/HandleLidSwitch=ignore/' /etc/systemd/logind.conf
-        sed -i 's/#HandleLidSwitchExternalPower=suspend/HandleLidSitchExternalPower=ignore/' /etc/systemd/logind.conf
-        sed -i 's/#HandleLidSwitchDocked=ignore/HandleLidSwitchDocked=ignore/' /etc/systemd/logind.conf
-        #add line to sshd conf for root login
-        sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-        #remove all of cloud-init
-        apt purge cloud-init -y
-        rm -rf /etc/cloud/ && rm -rf /var/lib/cloud/
-        #backup netplan file and create new one with correct network data
-        mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
-        #create new netplan file
-        cat > /etc/netplan/00-installer-config.yaml <<EOF
-        network:
-          version: 2
-          ethernets:
-            $lan:
-              dhcp4: true
-              optional: true
-          wifis:
-            $wlan:
-              dhcp4: true
-              optional: true
-              access-points:
-                "green"
-                  password: "$wifipass"
+l|L)
+echo
+read -p "Enter the wifi password: " wifipass
+port=1112
+lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
+wlan=$(ip link | awk -F: '$0 !~ "lo|vir|eno|eth|^[^0-9]"{print $2;getline}')
+#install wpa_supplicant, start and enable wpa_supplicant
+apt install wpasupplicant -y
+systemctl start wpa_supplicant
+systemctl enable wpa_supplicant
+#change settings so laptop lid does not turn off or sleep laptop
+sed -i 's/#HandleLidSwitch=suspend/HandleLidSwitch=ignore/' /etc/systemd/logind.conf
+sed -i 's/#HandleLidSwitchExternalPower=suspend/HandleLidSitchExternalPower=ignore/' /etc/systemd/logind.conf
+sed -i 's/#HandleLidSwitchDocked=ignore/HandleLidSwitchDocked=ignore/' /etc/systemd/logind.conf
+#add line to sshd conf for root login
+sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+#remove all of cloud-init
+apt purge cloud-init -y
+rm -rf /etc/cloud/ && rm -rf /var/lib/cloud/
+#backup netplan file and create new one with correct network data
+mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
+#create new netplan file
+cat > /etc/netplan/00-installer-config.yaml <<EOF
+network:
+  version: 2
+  ethernets:
+    $lan:
+      dhcp4: true
+      optional: true
+  wifis:
+    $wlan:
+      dhcp4: true
+      optional: true
+      access-points:
+        "green"
+          password: "$wifipass"
 EOF
-        netplan apply;;
-    d|D)
-        port=1111
-        lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
-        #add line to sshd conf for root login
-        sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-        #remove all of cloud-init
-        echo 'datasource_list: [ None ]' | sudo -s tee /etc/cloud/cloud.cfg.d/90_dpkg.cfg
-        apt purge cloud-init -y
-        rm -rf /etc/cloud/ && rm -rf /var/lib/cloud/
-        #backup netplan file and create new one with correct network data
-        mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
-        #create new netplan file
-        cat > /etc/netplan/00-installer-config.yaml <<EOF
-        network:
-          version: 2
-          ethernets:
-            $lan:
-              dhcp4: true
-              optional: true
+netplan apply;;
+
+d|D)
+port=1111
+lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
+#add line to sshd conf for root login
+sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+#remove all of cloud-init
+echo 'datasource_list: [ None ]' | sudo -s tee /etc/cloud/cloud.cfg.d/90_dpkg.cfg
+apt purge cloud-init -y
+rm -rf /etc/cloud/ && rm -rf /var/lib/cloud/
+#backup netplan file and create new one with correct network data
+mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
+#create new netplan file
+cat > /etc/netplan/00-installer-config.yaml <<EOF
+network:
+  version: 2
+  ethernets:
+    $lan:
+      dhcp4: true
+      optional: true
 EOF
-        netplan apply;;
-    *)
-        exit;;
+netplan apply;;
+
+*)
+exit;;
+
 esac
+
 #download xmrig monero miner
 wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-focal-x64.tar.gz
+
 #decompress xmrig monero miner
 tar -xzf xmrig-6.13.1-focal-x64.tar.gz
+
 #remove xmrig compressed file
 rm xmrig-6.13.1-focal-x64.tar.gz
+
 #create config.json
 cat > /home/$user/xmrig-6.13.1-focal-x64/config.json <<EOF
 {
@@ -193,7 +200,7 @@ User=root
 Group=root
 StandardOutput=journal
 StandardError=journal
-ExecStart=/home/$user/xmrig/xmrig
+ExecStart=/home/$user/xmrig-6.13.1-focal-x64/xmrig
 Restart=always
 [Install]
 WantedBy=multi-user.target
