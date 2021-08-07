@@ -4,6 +4,7 @@ read -p "Enter a name for system (generally the hostname): " name
 read -p "Enter the username to use (generally who you are logged in as): " user
 
 apt update && apt upgrade -y
+apt install lm-sensors inxi unzip -y
 
 #set system type for laptop or desktop
 read -n 1 -p "Is this system a laptop, desktop, or would you like to exit? (L/D/E) " ans;
@@ -14,8 +15,8 @@ case $ans in
         port=1112
         lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
         wlan=$(ip link | awk -F: '$0 !~ "lo|vir|eno|eth|^[^0-9]"{print $2;getline}')
-        #install unzip and wpa_supplicant, start and enable wpa_supplicant
-        apt install unzip wpasupplicant lm-sensors -y
+        #install wpa_supplicant, start and enable wpa_supplicant
+        apt install wpasupplicant -y
         systemctl start wpa_supplicant
         systemctl enable wpa_supplicant
         #change settings so laptop lid does not turn off or sleep laptop
@@ -49,8 +50,6 @@ EOF
     d|D)
         port=1111
         lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
-        #install unzip and lm_sensors
-        apt install unzip lm-sensors -y
         #add line to sshd conf for root login
         sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
         #remove all of cloud-init
@@ -72,16 +71,14 @@ EOF
     *)
         exit;;
 esac
-#make xmrig folder in user's home directory
-mkdir /home/$user/xmrig
-#download monero miner
-wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-focal-x64.tar.gz -P /home/$user/xmrig/
-#decompress xmrig
+#download xmrig monero miner
+wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-focal-x64.tar.gz
+#decompress xmrig monero miner
 tar -xzf /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gz -C /home/$user/xmrig/
 #remove xmrig compressed file
-rm /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gz
+rm xmrig-6.13.1-focal-x64.tar.gz
 #create config.json
-cat > /home/$user/xmrig/xmrig-6.13.1-focal-x64/config.json <<EOF
+cat > /home/$user/xmrig-6.13.1-focal-x64/config.json <<EOF
 {
     "api": {
         "id": null,
