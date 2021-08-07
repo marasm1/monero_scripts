@@ -72,11 +72,12 @@ EOF
     *)
         exit;;
 esac
-mkdir xmrig
+#make xmrig folder in user's home directory
+mkdir /home/$user/xmrig
 #download monero miner
 wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-focal-x64.tar.gz -P /home/$user/xmrig/
 #decompress xmrig
-tar -xzf /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gzz -C /home/$user/xmrig/
+tar -xzf /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gz -C /home/$user/xmrig/
 #remove xmrig compressed file
 rm /home/$user/xmrig/xmrig-6.13.1-focal-x64.tar.gz
 #create config.json
