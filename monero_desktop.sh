@@ -7,7 +7,7 @@ apt update && apt upgrade -y
 apt install lm-sensors inxi unzip -y
 
 #download xmrig monero miner
-wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-focal-x64.tar.gz
+wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-linux-x64.tar.gz
 
 #set system type for laptop or desktop
 read -n 1 -p "Is this system a laptop, desktop, or would you like to exit? (L/D/E) " ans;
@@ -79,10 +79,10 @@ exit;;
 esac
 
 #decompress xmrig monero miner
-tar -xzf xmrig-6.13.1-focal-x64.tar.gz
+tar -xzf xmrig-6.13.1-linux-x64.tar.gz
 
 #remove xmrig compressed file
-rm xmrig-6.13.1-focal-x64.tar.gz
+rm xmrig-6.13.1-linux-x64.tar.gz
 
 #create config.json
 cat > /home/$user/xmrig-6.13.1/config.json <<EOF
@@ -150,9 +150,9 @@ cat > /home/$user/xmrig-6.13.1/config.json <<EOF
     "log-file": null,
     "pools": [
         {
-            "algo": rx/0,
-            "coin": monero,
-            "url": "us.monero.herominers.com:$port"
+            "algo": "rx/0",
+            "coin": "monero",
+            "url": "us.monero.herominers.com:$port",
             "user": "467vAdG8mRNW5mJHnySfXhHijx7BorgvNVqnjS8kKCXcTQev9oxuss4Hs1Xn3vApsAJDTLsQgU7uEK7UVxUcuc9cSCJbvWZ",
             "pass": "$name",
             "rig-id": null,
@@ -195,6 +195,7 @@ cat > /etc/systemd/system/xmrig.service <<EOF
 [Unit]
 Description=xmrig Monero Miner
 After=network.target
+
 [Service]
 User=root
 Group=root
@@ -202,6 +203,7 @@ StandardOutput=journal
 StandardError=journal
 ExecStart=/home/$user/xmrig-6.13.1/xmrig
 Restart=always
+
 [Install]
 WantedBy=multi-user.target
 EOF
