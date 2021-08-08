@@ -6,6 +6,9 @@ read -p "Enter the username to use (generally who you are logged in as): " user
 apt update && apt upgrade -y
 apt install lm-sensors inxi unzip -y
 
+#download xmrig monero miner
+wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-focal-x64.tar.gz
+
 #set system type for laptop or desktop
 read -n 1 -p "Is this system a laptop, desktop, or would you like to exit? (L/D/E) " ans;
 case $ans in
@@ -75,9 +78,6 @@ exit;;
 
 esac
 
-#download xmrig monero miner
-wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-focal-x64.tar.gz
-
 #decompress xmrig monero miner
 tar -xzf xmrig-6.13.1-focal-x64.tar.gz
 
@@ -85,7 +85,7 @@ tar -xzf xmrig-6.13.1-focal-x64.tar.gz
 rm xmrig-6.13.1-focal-x64.tar.gz
 
 #create config.json
-cat > /home/$user/xmrig-6.13.1-focal-x64/config.json <<EOF
+cat > /home/$user/xmrig-6.13.1/config.json <<EOF
 {
     "api": {
         "id": null,
@@ -200,7 +200,7 @@ User=root
 Group=root
 StandardOutput=journal
 StandardError=journal
-ExecStart=/home/$user/xmrig-6.13.1-focal-x64/xmrig
+ExecStart=/home/$user/xmrig-6.13.1/xmrig
 Restart=always
 [Install]
 WantedBy=multi-user.target
