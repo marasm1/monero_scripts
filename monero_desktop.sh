@@ -1,7 +1,10 @@
 #!/bin/bash
 #set name for display at herominers and user to use
-read -p "Enter a name for system (generally the hostname): " name
-read -p "Enter the username to use (generally who you are logged in as): " user
+#read -p "Enter a name for system (generally the hostname): " name
+#read -p "Enter the username to use (generally who you are logged in as): " user
+
+name=$(hostname)
+user=$(whoami)
 
 apt update && apt upgrade -y
 apt install lm-sensors inxi unzip -y
@@ -84,7 +87,7 @@ tar -xzf xmrig-6.13.1-linux-x64.tar.gz
 #remove xmrig compressed file
 rm xmrig-6.13.1-linux-x64.tar.gz
 
-#create config.json
+#create xmrig config.json
 cat > /home/$user/xmrig-6.13.1/config.json <<EOF
 {
     "api": {
