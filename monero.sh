@@ -49,7 +49,7 @@ network:
       dhcp4: true
       optional: true
       access-points:
-        "green"
+        "green":
           password: "$wifipass"
 EOF
 netplan apply;;
