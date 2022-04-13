@@ -18,7 +18,7 @@ case $ans in
 l|L)
 echo
 read -p "Enter the wifi password: " wifipass
-port=1112
+port=3333
 lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
 wlan=$(ip link | awk -F: '$0 !~ "lo|vir|eno|eth|^[^0-9]"{print $2;getline}')
 #install wpa_supplicant, start and enable wpa_supplicant
@@ -55,7 +55,7 @@ EOF
 netplan apply;;
 
 d|D)
-port=1111
+port=5555
 lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
 #add line to sshd conf for root login
 sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -155,7 +155,7 @@ cat > /home/$user/xmrig-6.13.1/config.json <<EOF
         {
             "algo": "rx/0",
             "coin": "monero",
-            "url": "us.monero.herominers.com:$port",
+            "url": "pool.supportxmr.com:$port",
             "user": "467vAdG8mRNW5mJHnySfXhHijx7BorgvNVqnjS8kKCXcTQev9oxuss4Hs1Xn3vApsAJDTLsQgU7uEK7UVxUcuc9cSCJbvWZ",
             "pass": "$name",
             "rig-id": null,
