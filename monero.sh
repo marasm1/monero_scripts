@@ -1,10 +1,10 @@
 #!/bin/bash
 #set name for display at herominers and user to use
 #read -p "Enter a name for system (generally the hostname): " name
-#read -p "Enter the username to use (generally who you are logged in as): " user
+read -p "Enter the username to use (generally who you are logged in as): " user
 
 name=$(hostname)
-user=$(whoami)
+#user=$(whoami)
 
 apt update && apt upgrade -y
 apt install lm-sensors inxi unzip wget build-essential cmake libuv1-dev libssl-dev libhwloc-dev software-properties-common -y
@@ -112,10 +112,10 @@ mkdir xmrig-cuda/build && cd xmrig-cuda/build
 cmake .. -DCUDA_LIB=/usr/local/cuda/lib64/stubs/libcuda.so -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda
 make -j$(nproc)
 # move cuda file(s) to main xmig directory
-mv libxmrix-* /home/$user/xmrig-6.21.3/
+mv libxmrig-* /home/$user/xmrig-6.21.3/
 # remove xmrig cuda directory
 rm -rf /home/$user/xmrig-cuda
-rm cuda-repo-debian12-12-4-local_12.4.1-550.54.15-1_amd64.deb;;
+rm /home/$user/cuda-repo-debian12-12-4-local_12.4.1-550.54.15-1_amd64.deb;;
 
 *)
 exit;;
