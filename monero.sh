@@ -115,6 +115,7 @@ make -j$(nproc)
 mv libxmrix-* /home/$user/xmrig-6.21.3/
 # remove xmrig cuda directory
 rm -rf /home/$user/xmrig-cuda;;
+rm cuda-repo-debian12-12-4-local_12.4.1-550.54.15-1_amd64.deb
 
 *)
 exit;;
