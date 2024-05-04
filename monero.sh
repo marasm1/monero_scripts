@@ -1,10 +1,10 @@
 #!/bin/bash
 #set name for display at herominers and user to use
 #read -p "Enter a name for system (generally the hostname): " name
-read -p "Enter the username to use (generally who you are logged in as): " user
+#read -p "Enter the username to use (generally who you are logged in as): " user
 
 name=$(hostname)
-#user=$(whoami)
+user=$(whoami)
 
 apt update && apt upgrade -y
 apt install lm-sensors inxi unzip wget -y
