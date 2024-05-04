@@ -98,7 +98,7 @@ network:
       dhcp4: true
       optional: true
 EOF
-netplan apply;;
+netplan apply
 #download and make cuda
 wget https://developer.download.nvidia.com/compute/cuda/12.4.1/local_installers/cuda-repo-debian12-12-4-local_12.4.1-550.54.15-1_amd64.deb
 dpkg -i cuda-repo-debian12-12-4-local_12.4.1-550.54.15-1_amd64.deb
@@ -114,7 +114,7 @@ make -j$(nproc)
 # move cuda file(s) to main xmig directory
 mv libxmrix-* /home/$user/xmrig-6.21.3/
 # remove xmrig cuda directory
-rm -rf /home/$user/xmrig-cuda
+rm -rf /home/$user/xmrig-cuda;;
 
 *)
 exit;;
