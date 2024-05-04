@@ -105,7 +105,7 @@ dpkg -i cuda-repo-debian12-12-4-local_12.4.1-550.54.15-1_amd64.deb
 cp /var/cuda-repo-debian12-12-4-local/cuda-*-keyring.gpg /usr/share/keyrings/
 add-apt-repository contrib
 apt update
-apt install cuda-toolkit-12-4 -y
+apt install cuda-toolkit-12-4 cuda-drivers -y
 #download and install xmrig cuda from source
 git clone https://github.com/xmrig/xmrig-cuda.git
 mkdir xmrig-cuda/build && cd xmrig-cuda/build
