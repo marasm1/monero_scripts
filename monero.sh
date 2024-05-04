@@ -61,7 +61,7 @@ network:
 EOF
 netplan apply;;
 #set gpu state for config file
-gpu_state=false
+gpustate=false
 
 d|D)
 port=5555
@@ -81,7 +81,7 @@ network:
 EOF
 netplan apply;;
 #set gpu state for config file
-gpu_state=false
+gpustate=false
 
 g|G)
 port=5555
@@ -119,7 +119,7 @@ mv libxmrix-* /home/$user/xmrig-6.21.3/
 # remove xmrig cuda directory
 rm -rf /home/$user/xmrig-cuda
 #set gpu state for config file
-gpu_state=true
+gpustate=true
 
 *)
 exit;;
@@ -181,7 +181,7 @@ cat > /home/$user/xmrig-6.21.3/config.json <<EOF
         "cn-lite/0": false
     },
     "cuda": {
-        "enabled": $gpu_state,
+        "enabled": $gpustate,
         "loader": null,
         "nvml": true,
         "cn/0": false,
