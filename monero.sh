@@ -41,9 +41,6 @@ sed -i 's/#HandleLidSwitchExternalPower=suspend/HandleLidSitchExternalPower=igno
 sed -i 's/#HandleLidSwitchDocked=ignore/HandleLidSwitchDocked=ignore/' /etc/systemd/logind.conf
 #add line to sshd conf for root login
 sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-#remove all of cloud-init
-apt purge cloud-init -y
-rm -rf /etc/cloud/ && rm -rf /var/lib/cloud/
 #backup netplan file and create new one with correct network data
 mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
 #create new netplan file
@@ -63,6 +60,7 @@ network:
           password: "$wifipass"
 EOF
 netplan apply;;
+#set gpu state for config file
 gpu_state=false
 
 d|D)
@@ -70,10 +68,6 @@ port=5555
 lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
 #add line to sshd conf for root login
 sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-#remove all of cloud-init
-echo 'datasource_list: [ None ]' | sudo -s tee /etc/cloud/cloud.cfg.d/90_dpkg.cfg
-apt purge cloud-init -y
-rm -rf /etc/cloud/ && rm -rf /var/lib/cloud/
 #backup netplan file and create new one with correct network data
 mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
 #create new netplan file
@@ -86,6 +80,7 @@ network:
       optional: true
 EOF
 netplan apply;;
+#set gpu state for config file
 gpu_state=false
 
 g|G)
@@ -93,10 +88,6 @@ port=5555
 lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
 #add line to sshd conf for root login
 sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-#remove all of cloud-init
-echo 'datasource_list: [ None ]' | sudo -s tee /etc/cloud/cloud.cfg.d/90_dpkg.cfg
-apt purge cloud-init -y
-rm -rf /etc/cloud/ && rm -rf /var/lib/cloud/
 #backup netplan file and create new one with correct network data
 mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
 #create new netplan file
@@ -127,6 +118,7 @@ make -j$(nproc)
 mv libxmrix-* /home/$user/xmrig-6.21.3/
 # remove xmrig cuda directory
 rm -rf /home/$user/xmrig-cuda
+#set gpu state for config file
 gpu_state=true
 
 *)
