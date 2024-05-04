@@ -29,6 +29,7 @@ l|L)
 echo
 read -p "Enter the wifi password: " wifipass
 port=3333
+gpustate=false
 lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
 wlan=$(ip link | awk -F: '$0 !~ "lo|vir|eno|eth|^[^0-9]"{print $2;getline}')
 #install wpa_supplicant, start and enable wpa_supplicant
@@ -60,11 +61,10 @@ network:
           password: "$wifipass"
 EOF
 netplan apply;;
-#set gpu state for config file
-gpustate=false
 
 d|D)
 port=5555
+gpustate=false
 lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
 #add line to sshd conf for root login
 sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -80,11 +80,10 @@ network:
       optional: true
 EOF
 netplan apply;;
-#set gpu state for config file
-gpustate=false
 
 g|G)
 port=5555
+gpustate=true
 lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
 #add line to sshd conf for root login
 sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -118,8 +117,6 @@ make -j$(nproc)
 mv libxmrix-* /home/$user/xmrig-6.21.3/
 # remove xmrig cuda directory
 rm -rf /home/$user/xmrig-cuda
-#set gpu state for config file
-gpustate=true
 
 *)
 exit;;
