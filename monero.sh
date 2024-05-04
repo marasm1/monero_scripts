@@ -246,7 +246,12 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-#enable xlarig service and reboot
+#enable and start xlarig service to generate/rebuild xmrig config file
 systemctl enable xmrig
 systemctl start xmrig
+
+#append gpu section into xmrig config file as it seems to get stripped out somehow
+
+
+
 reboot now
