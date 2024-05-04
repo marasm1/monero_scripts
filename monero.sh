@@ -7,7 +7,7 @@ name=$(hostname)
 user=$(whoami)
 
 apt update && apt upgrade -y
-apt install lm-sensors inxi unzip wget -y
+apt install lm-sensors inxi unzip wget build-essential cmake libuv1-dev libssl-dev libhwloc-dev software-properties-common -y
 
 #download xmrig monero miner
 #wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-linux-x64.tar.gz
@@ -99,8 +99,6 @@ network:
       optional: true
 EOF
 netplan apply;;
-#install build tools
-apt install build-essential cmake libuv1-dev libssl-dev libhwloc-dev software-properties-common -y
 #download and make cuda
 wget https://developer.download.nvidia.com/compute/cuda/12.4.1/local_installers/cuda-repo-debian12-12-4-local_12.4.1-550.54.15-1_amd64.deb
 dpkg -i cuda-repo-debian12-12-4-local_12.4.1-550.54.15-1_amd64.deb
