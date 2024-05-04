@@ -7,14 +7,24 @@ name=$(hostname)
 #user=$(whoami)
 
 apt update && apt upgrade -y
-apt install lm-sensors inxi unzip -y
+apt install lm-sensors inxi unzip wget -y
 
 #download xmrig monero miner
-wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-linux-x64.tar.gz
+#wget https://github.com/xmrig/xmrig/releases/download/v6.13.1/xmrig-6.13.1-linux-x64.tar.gz
+wget https://github.com/xmrig/xmrig/releases/download/v6.21.3/xmrig-6.21.3-linux-static-x64.tar.gz
+
+#decompress xmrig monero miner
+#tar -xzf xmrig-6.13.1-linux-x64.tar.gz
+tar -xzf xmrig-6.21.3-linux-static-x64.tar.gz
+
+#remove xmrig compressed file
+#rm xmrig-6.13.1-linux-x64.tar.gz
+rm xmrig-6.21.3-linux-static-x64.tar.gz
 
 #set system type for laptop or desktop
-read -n 1 -p "Is this system a laptop, desktop, or would you like to exit? (L/D/E) " ans;
+read -n 1 -p "Is this system a [l]aptop, [d]esktop, desktop with [G]PU, or would you like to [e]xit? (L/D/E/G) " ans;
 case $ans in
+
 l|L)
 echo
 read -p "Enter the wifi password: " wifipass
@@ -53,6 +63,7 @@ network:
           password: "$wifipass"
 EOF
 netplan apply;;
+gpu_state=false
 
 d|D)
 port=5555
@@ -75,20 +86,56 @@ network:
       optional: true
 EOF
 netplan apply;;
+gpu_state=false
+
+g|G)
+port=5555
+lan=$(ip link | awk -F: '$0 !~ "lo|vir|wl|^[^0-9]"{print $2;getline}')
+#add line to sshd conf for root login
+sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+#remove all of cloud-init
+echo 'datasource_list: [ None ]' | sudo -s tee /etc/cloud/cloud.cfg.d/90_dpkg.cfg
+apt purge cloud-init -y
+rm -rf /etc/cloud/ && rm -rf /var/lib/cloud/
+#backup netplan file and create new one with correct network data
+mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak
+#create new netplan file
+cat > /etc/netplan/00-installer-config.yaml <<EOF
+network:
+  version: 2
+  ethernets:
+    $lan:
+      dhcp4: true
+      optional: true
+EOF
+netplan apply;;
+#install build tools
+apt install build-essential cmake libuv1-dev libssl-dev libhwloc-dev software-properties-common -y
+#download and make cuda
+wget https://developer.download.nvidia.com/compute/cuda/12.4.1/local_installers/cuda-repo-debian12-12-4-local_12.4.1-550.54.15-1_amd64.deb
+dpkg -i cuda-repo-debian12-12-4-local_12.4.1-550.54.15-1_amd64.deb
+cp /var/cuda-repo-debian12-12-4-local/cuda-*-keyring.gpg /usr/share/keyrings/
+add-apt-repository contrib
+apt update
+apt install cuda-toolkit-12-4 -y
+#download and install xmrig cuda from source
+git clone https://github.com/xmrig/xmrig-cuda.git
+mkdir xmrig-cuda/build && cd xmrig-cuda/build
+cmake .. -DCUDA_LIB=/usr/local/cuda/lib64/stubs/libcuda.so -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda
+make -j$(nproc)
+# move cuda file(s) to main xmig directory
+mv libxmrix-* /home/$user/xmrig-6.21.3/
+# remove xmrig cuda directory
+rm -rf /home/$user/xmrig-cuda
+gpu_state=true
 
 *)
 exit;;
 
 esac
 
-#decompress xmrig monero miner
-tar -xzf xmrig-6.13.1-linux-x64.tar.gz
-
-#remove xmrig compressed file
-rm xmrig-6.13.1-linux-x64.tar.gz
-
 #create xmrig config.json
-cat > /home/$user/xmrig-6.13.1/config.json <<EOF
+cat > /home/$user/xmrig-6.21.3/config.json <<EOF
 {
     "api": {
         "id": null,
@@ -142,7 +189,7 @@ cat > /home/$user/xmrig-6.13.1/config.json <<EOF
         "cn-lite/0": false
     },
     "cuda": {
-        "enabled": false,
+        "enabled": $gpu_state,
         "loader": null,
         "nvml": true,
         "cn/0": false,
@@ -204,7 +251,7 @@ User=root
 Group=root
 StandardOutput=journal
 StandardError=journal
-ExecStart=/home/$user/xmrig-6.13.1/xmrig
+ExecStart=/home/$user/xmrig-6.21.3/xmrig
 Restart=always
 
 [Install]
